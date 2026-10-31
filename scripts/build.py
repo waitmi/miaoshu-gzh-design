@@ -4,7 +4,7 @@
 用法：
   python3 scripts/build.py <主题id|all> <标记稿.gzh.md> [--src 原文.md] [--out 输出目录] [--no-shot]
 
-  主题id：miaolan nuanzhi shenlan wangge tijian heiban leitai；all = 7 套全出
+  主题id：miaolan nuanzhi shenlan wangge tijian heiban leitai xuangou；all = 8 套全出
   --src     原文 Markdown。提供时：原文已有的禁用词降级为 WARN，并做原文逐句覆盖比对
   --out     输出目录，默认 output/<标记稿名>/<主题id>/（主题为 all 时自动按主题分子目录）
   --no-shot 不截图（没有浏览器环境时用；同时跳过版面自检）

@@ -4,7 +4,7 @@
   <序号>-<主题id>-top.jpg   首屏（手机一屏，750px 宽）
   <序号>-<主题id>-full.jpg  完整长图（压缩到单张 < 1.5MB）
   <序号>-<主题id>-palette.png 色板
-  overview.jpg              7 套总览（首屏 + 一段核心组件）
+  overview.jpg              8 套总览（首屏 + 一段核心组件）
 
 用法：
   python3 scripts/make_previews.py               全部主题 + 总览
@@ -35,6 +35,7 @@ SHOWCASE = [
     ('5', 'tijian', '⑤ 保单体检报告单 · 诊断排查', '保单诊断 / 条款排查 / 政策条款解读', '保证续保', '定义四段 · 逐项检查结果', '约定费率'),
     ('6', 'heiban', '⑥ 黑板荧光笔 · 知识笔记', '医保怎么选 / 名词解释 / 一个公式讲清楚', '居民医保一档二档', '黑板推演 · 重庆', '735元'),
     ('7', 'leitai', '⑦ 测评擂台 · 产品横评', '多款横评 / 两款 PK / 单品拆解', '五款重疾横评', '肺结节赔额', '三项只给一项'),
+    ('8', 'xuangou', '⑧ 选购清单 · 产品列表推荐', '月度选购清单 / 分类产品推荐 / 适合人群', '重疾医疗选购清单', '大额住院费用', '示例产品B'),
 ]
 
 FIND = r'''([a, b]) => {
@@ -67,7 +68,8 @@ def save_jpg(im, path, width, q=82):
 def theme_images(item):
     n, tid, name, use, ex, a, b = item
     out = os.path.join(WORK, tid)
-    rep, err = build(tid, os.path.join(ROOT, 'examples', ex + '.gzh.md'), out)
+    src = os.path.join(ROOT, 'examples', ex + '.md')  # 附了原文的示例（如⑧）带原文构建，做覆盖比对
+    rep, err = build(tid, os.path.join(ROOT, 'examples', ex + '.gzh.md'), out, src if os.path.exists(src) else None)
     print('\n'.join(l for l in rep if l.startswith('—')))
     if err:
         raise SystemExit('%s 有 ERROR，停止' % tid)
@@ -104,7 +106,7 @@ def overview():
     cells = [cell % (name, use, os.path.join(WORK, tid), os.path.join(WORK, tid)) for _, tid, name, use, *_ in SHOWCASE]
     guide = [('日常条款释义 / 家庭避坑', '①'), ('案例复盘 / 观点长文', '②'), ('养老 / 年金 / 分红测算', '③'),
              ('选购指南 / 清单排序', '④'), ('保单诊断 / 政策条款解读', '⑤'), ('医保怎么选 / 带公式科普', '⑥'),
-             ('多款横评 / 两款 PK', '⑦')]
+             ('多款横评 / 两款 PK', '⑦'), ('月度选购清单 / 分类产品推荐', '⑧')]
     gl = ''.join('<tr><td style="padding:14px 0;border-bottom:1px solid #D9DDE3;font:26px/1.4 \'PingFang SC\',sans-serif;color:#333">%s</td>'
                  '<td style="padding:14px 0;border-bottom:1px solid #D9DDE3;font:bold 30px/1.4 \'PingFang SC\',sans-serif;color:#0288D1;text-align:right">%s</td></tr>' % g
                  for g in guide)
@@ -113,10 +115,10 @@ def overview():
                  '<p style="margin:0 0 18px;font:22px/1.4 \'PingFang SC\',sans-serif;color:#666">按文章类型对号入座，主力用①，每周轮换一套</p>'
                  '<table style="border-collapse:collapse;width:100%%;background:#fff;padding:0 24px;border:1px solid #ccc">'
                  '<tr><td colspan="2" style="padding:6px 24px 10px"><table style="border-collapse:collapse;width:100%%">%s</table></td></tr></table></td>' % gl)
-    rows = '<tr>%s</tr><tr>%s</tr>' % (''.join(cells[:4]), ''.join(cells[4:]))
+    rows = ''.join('<tr>%s</tr>' % ''.join(cells[i:i + 3]) for i in range(0, len(cells), 3))
     html = ('<!DOCTYPE html><html><head><meta charset="utf-8"><style>%s</style></head>'
-            '<body style="margin:0;background:#E9EBEE;padding:30px 16px 0;width:3160px;">'
-            '<p style="margin:0 14px 6px;font:bold 44px/1.4 \'PingFang SC\',sans-serif;color:#111">喵叔说保 · 公众号排版 7 套主题</p>'
+            '<body style="margin:0;background:#E9EBEE;padding:30px 16px 0;width:2370px;">'
+            '<p style="margin:0 14px 6px;font:bold 44px/1.4 \'PingFang SC\',sans-serif;color:#111">喵叔说保 · 公众号排版 8 套主题</p>'
             '<p style="margin:0 14px 28px;font:24px/1.4 \'PingFang SC\',sans-serif;color:#666">375px 手机宽　｜　每套用最契合的一篇真实文章排版　｜　原文一字不改，只加结构与标签</p>'
             '<table style="border-collapse:collapse">%s</table></body></html>' % (font_css(), rows))
     f = os.path.join(WORK, 'overview.html')
@@ -125,7 +127,7 @@ def overview():
     png = os.path.join(WORK, 'overview.png')
     with sync_playwright() as p:
         br = launch(p)
-        pg = br.new_page(viewport={'width': 3192, 'height': 1000}, device_scale_factor=1)
+        pg = br.new_page(viewport={'width': 2402, 'height': 1000}, device_scale_factor=1)
         pg.goto('file://' + f)
         pg.evaluate('document.fonts.ready')
         pg.wait_for_timeout(800)
@@ -143,6 +145,8 @@ PALETTES = {
     'tijian': [('#FBFAF6', '米白'), ('#1F5FA8', '检验蓝'), ('#23955B', '正常'), ('#6B7280', '注意'), ('#D23F3F', '限制')],
     'heiban': [('#FFFDF7', '笔记纸'), ('#26392F', '黑板绿'), ('#F5D76E', '粉笔黄'), ('#FFE873', '荧光黄'), ('#E04F3F', '红笔')],
     'leitai': [('#15181E', '擂台黑'), ('#E5483B', '红方'), ('#2563C9', '蓝方'), ('#2C2F36', '正文'), ('#F4F5F7', '浅灰')],
+    'xuangou': [('#051A4C', '海军蓝'), ('#F5B83D', '月份金'), ('#0288D1', '分类蓝'), ('#B57A12', '分类金'),
+                ('#2E7D5B', '分类绿'), ('#C2506E', '分类玫红'), ('#F3F6FA', '页底灰')],
 }
 
 

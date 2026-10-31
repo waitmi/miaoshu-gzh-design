@@ -9,7 +9,8 @@ spec 语法（详见 templates/标记语法.md）：
   @src 原文路径                    必填，相对 spec 所在目录或绝对路径
   @title/@tbr/@kicker/@date/@type  元信息（title 缺省取原文 # 标题）
   @mark <**|==|++> <原文子串>       行内标记，作用于子串在正文里第一次出现处
-  <<n>> 或 <<a-b>>                 引用原文第 n 段 / 第 a～b 段
+  <<n>> 或 <<a-b>>                 引用原文第 n 段 / 第 a～b 段（独占一行）
+  行内 <<n>>                       嵌在行里引用单段，如产品列表 `# <<3>> | 示例`、`- <<4>>`
 其余行原样保留（## 标题、::: 指令块、| 表格行等排版新加内容）。
 """
 import os
@@ -53,6 +54,15 @@ def main():
                     print('WARN 段落重复引用', i)
                 used.add(i)
                 body += [paras[i], '']
+        elif re.search(r'<<\d+>>', ln):
+            # 行内引用（产品列表的 `# <<n>> | 示例`、`- <<n>>` 等）：原样替换为第 n 段
+            def sub(mm):
+                i = int(mm.group(1))
+                if i in used:
+                    print('WARN 段落重复引用', i)
+                used.add(i)
+                return paras[i]
+            body.append(re.sub(r'<<(\d+)>>', sub, ln))
         else:
             body.append(ln)
     blines = '\n'.join(body).split('\n')

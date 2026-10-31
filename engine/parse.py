@@ -85,11 +85,46 @@ def _block(kind, argv, body):
         b['items'] = [[x.strip() for x in l.split('|', 1)] for l in lines]
     elif kind in ('gates', 'steps', 'end'):
         b['items'] = lines
+    elif kind == 'products':
+        b.update(_products(lines))
     else:
         # 通用：以 | 开头的行进 rows，其余按空行分段进 paras（第二批主题的 grid/vs/report/roster 等用）
         b['paras'] = _paras([l for l in body if not l.strip().startswith('|')])
         b['rows'] = [[c.strip() for c in l.strip().strip('|').split('|')] for l in lines if l.startswith('|')]
     return b
+
+
+def _point(t):
+    """产品要点：`标签 | 正文` 或 `标签：正文`（标签 ≤6 字且不含标点时才拆）。返回 (标签, 正文, 分隔符)。"""
+    if '|' in t:
+        lab, txt = [x.strip() for x in t.split('|', 1)]
+        return lab, txt, '：'
+    k = t.find('：')
+    if 0 < k <= 6 and not re.search(r'[，。、；？！（）]', t[:k]):
+        return t[:k], t[k + 1:], '：'
+    return '', t, ''
+
+
+def _products(lines):
+    """产品列表块（选购清单）：
+      # 产品名 | 角标        一张产品卡（角标可省略，如「示例」）
+      - 标签 | 正文 / - 标签：正文   卡内要点（标签可省略）
+      其他行                 分类导语（排在产品卡前）
+    paras 收齐全部正文（导语、产品名、要点），供未提供原文时比对和兜底降级用。"""
+    intro, prods = [], []
+    for l in lines:
+        if l.startswith('# '):
+            name, _, badge = l[2:].partition('|')
+            prods.append({'name': name.strip(), 'badge': badge.strip(), 'points': []})
+        elif l.startswith('- ') and prods:
+            prods[-1]['points'].append(_point(l[2:].strip()))
+        else:
+            intro.append(l)
+    paras = list(intro)
+    for pd in prods:
+        paras.append(pd['name'])
+        paras += [lab + sep + txt for lab, txt, sep in pd['points']]
+    return {'intro': intro, 'products': prods, 'paras': paras, 'rows': []}
 
 
 INLINE = re.compile(r'(\*\*.+?\*\*|==.+?==|\+\+.+?\+\+)')

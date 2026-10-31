@@ -203,6 +203,32 @@ class T(Theme):
             + '<p style="margin:0;font-size:13px;line-height:1.6;">%s</p>' % sp(
                 'display:inline-block;padding:4px 14px;border-radius:14px;background:%s;color:#FFFFFF;font-weight:bold;' % BLUE, it[2]))
 
+    # 产品列表（选购清单）：⑧ xuangou 的主组件。①–⑦ 用这一版通用实现（继承主题自动换色）：
+    # 分类标题条 + 细框产品卡 + 「标签：正文」要点；标签含「适合」的要点铺浅底。
+    def b_products(self, b):
+        name, tag = (b['args'] + ['', ''])[:2]
+        self.cat = getattr(self, 'cat', 0) + 1
+        head = ('<p style="margin:0 0 4px;font-size:13px;line-height:1.6;">%s%s</p>' % (
+                    self.tagx('%02d' % self.cat, BLUE, '#FFFFFF'), sp('color:%s;font-size:16px;font-weight:bold;' % NAVY, name))
+                + ('<p style="margin:0 0 12px;font-size:12px;line-height:1.6;color:#8A94A3;">%s</p>' % leaf(tag) if tag else ''))
+        intro = ''.join(self.p(t, 'font-size:14px;margin-bottom:12px;') for t in b.get('intro', []))
+        cards = []
+        for pd in b.get('products', []):
+            title = ('<p style="margin:0 0 8px;padding:0 0 8px;font-size:15px;line-height:1.5;color:%s;font-weight:bold;'
+                     'border-bottom:1px dashed #D6E9F5;">%s%s</p>' % (
+                         NAVY, leaf(pd['name']),
+                         sp('display:inline-block;margin-left:6px;padding:0 6px;border-radius:3px;background:#EEF7FD;color:%s;'
+                            'font-size:11px;line-height:1.6;font-weight:normal;' % BLUE, pd['badge']) if pd['badge'] else ''))
+            pts = []
+            for lab, txt, sep in pd['points']:
+                fit = '适合' in lab
+                lead = sp('color:%s;font-weight:bold;' % (NAVY if fit else BLUE), lab + sep) if lab else ''
+                pts.append('<p style="margin:0 0 8px;font-size:14px;line-height:1.75;color:#55606F;text-align:justify;%s">%s%s</p>' % (
+                    'background:#FFF7E0;padding:6px 8px;border-radius:4px;' if fit else '', lead, self.rich(txt)))
+            cards.append(sec('margin:0 0 12px;padding:12px 14px 4px;border:1px solid #D6E9F5;border-radius:8px;background:#FFFFFF;',
+                             title + ''.join(pts)))
+        return sec('margin:8px 16px 24px;', head + intro + ''.join(cards))
+
     def b_disclaimer(self, b):
         return sec('margin:0 16px 10px;padding:10px 0 0;border-top:1px solid %s;' % self.P['line'],
             ''.join('<p style="margin:0;font-size:12px;line-height:1.7;color:%s;text-align:justify;">%s</p>' % (self.P['muted'], self.rich(t))

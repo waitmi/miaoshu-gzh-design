@@ -118,8 +118,12 @@ class Theme:
             self.unknown.append(b['type'])
             for t in b.get('paras', []):
                 out.append({'type': 'para', 'text': t})
-            if b.get('rows'):
-                out.append({'type': 'table', 'args': b.get('args', []), 'rows': b['rows']})
+            rows = b.get('rows') or []
+            if rows and max(len(r) for r in rows) < 2:
+                # 单列行（如⑤ chips 标签）：表格至少要两列，降级为一行一段
+                out += [{'type': 'para', 'text': r[0]} for r in rows if r and r[0]]
+            elif rows:
+                out.append({'type': 'table', 'args': b.get('args', []), 'rows': rows})
         return out
 
     def render(self, blocks):

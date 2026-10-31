@@ -16,7 +16,7 @@ from checker import check  # noqa: E402
 from source import source_paragraphs, coverage  # noqa: E402
 from page import preview_page  # noqa: E402
 
-THEMES = ['miaolan', 'nuanzhi', 'shenlan', 'wangge', 'tijian', 'heiban', 'leitai']
+THEMES = ['miaolan', 'nuanzhi', 'shenlan', 'wangge', 'tijian', 'heiban', 'leitai', 'xuangou']
 
 
 def draft_text(blocks):
