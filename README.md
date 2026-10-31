@@ -199,3 +199,22 @@ miaoshu-gzh-design/
 ## 许可
 
 代码与主题以 [MIT](LICENSE) 许可发布。`examples/` 中的文章内容版权归「喵叔说保」所有，仅作排版示例；文中产品仅作条款举例，不构成任何购买推荐。
+
+## 关于作者 / 联系喵叔
+
+这套排版是喵叔给自己的公众号「喵叔说保」做的，开源出来，希望别的行业也能直接用上。用的时候遇到问题、想定制一套自己行业的主题，或者想聊内容合作，都欢迎来找我。
+
+<p align="center"><img src="assets/brand/contact-card.jpg" alt="喵叔联系方式名片" width="720"></p>
+
+<table align="center">
+  <tr>
+    <td align="center" width="50%"><img src="assets/brand/gzh-qr.png" alt="公众号「喵叔说保」二维码" width="200"></td>
+    <td align="center" width="50%"><img src="assets/brand/reward-qr.png" alt="赞赏码" width="200"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>关注公众号「喵叔说保」</b><br>看这套排版在真实文章里的样子</td>
+    <td align="center"><b>觉得有用，请喵叔喝杯咖啡</b><br>微信扫码赞赏，随意就好</td>
+  </tr>
+</table>
+
+<p align="center">名片上的二维码是喵叔的个人微信：各行业的公众号排版、内容合作都可以聊，加好友时备注「GitHub」。</p>
