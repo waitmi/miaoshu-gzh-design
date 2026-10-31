@@ -8,7 +8,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
   <a href="SKILL.md"><img src="https://img.shields.io/badge/Agent-Skill-0288D1.svg" alt="Agent Skill"></a>
   <a href="docs/THEMES.md"><img src="https://img.shields.io/badge/themes-8-051A4C.svg" alt="themes 8"></a>
-  <a href="#-快速开始"><img src="https://img.shields.io/badge/Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Cursor-supported-8b5cf6.svg" alt="Claude Code · Codex · Cursor supported"></a>
+  <a href="#-快速开始"><img src="https://img.shields.io/badge/WorkBuddy%20%C2%B7%20Trae%20%C2%B7%20Claude%20Code%20%C2%B7%20Codex-supported-8b5cf6.svg" alt="WorkBuddy · Trae · Claude Code · Codex supported"></a>
 </p>
 
 ---
@@ -64,7 +64,7 @@ npx skills add https://github.com/waitmi/miaoshu-gzh-design
 
 ### 方式二：让 Agent 自己装
 
-对 Claude Code / Codex / Cursor 等任意 Agent 说：
+对 WorkBuddy、Trae、Qoder 等国内 Agent 说（Claude Code、Codex、Cursor 也一样）：
 
 > 请帮我安装 https://github.com/waitmi/miaoshu-gzh-design 这个 skill
 
@@ -110,7 +110,7 @@ playwright install chromium        # 或设置 GZH_CHROMIUM=/path/to/chromium
 
 **Q：产品列表 `::: products` 换到别的主题会坏吗？**　A：不会。8 套主题都实现了产品列表，①–⑦ 用通用版并自动换成各自色板；只有 ④⑤⑥⑦ 的专属组件在别的主题里会降级为段落/表格，并在报告里给 WARN。
 
-**Q：只能在 Claude Code 里用吗？**　A：不限。任何能读 skill 目录、能跑 Python 的 Agent 都可以，工作流全部写在 `SKILL.md` 里。
+**Q：国内的 AI 工具能用吗？**　A：能。WorkBuddy、Trae、Qoder 这类支持 Skill、能跑 Python 的国内 Agent 都可以直接用；Claude Code、Codex、Cursor 当然也行。工作流全部写在 `SKILL.md` 里，不挑工具。
 
 ---
 
